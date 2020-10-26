@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+{% block title %} CRUD Alunos {% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col md-12">
+            <div class="jumbotron p-3 ">
+                <h2>
+                    Gerenciar <b>Alunos</b>
+                    <button type="button" class="btn btn-success float-right" data-toggle="modal"
+                        data-target="#addModal">Adicionar
+                        Novo Aluno <i class="fas fa-user-plus pl-2"></i></button>
+                </h2>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+
+                <div class="alert alert-success alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                    </button>
+                    {{message}}
+                </div>
+
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <table class="table table-hover table-dark p-3">
+                    <thead>
+                        <tr>
+                            <th>RA</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Logradouro</th>
+                            <th>Numero</th>
+                            <th>CEP</th>
+                            <th>Complemento</th>
+                            <th>ação</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for a in alunos %}
+                        <tr>
+
+                            <td>{{a.ra}}</td>
+                            <td>{{a.nome}}</td>
+                            <td>{{a.email}}</td>
+                            <td>{{a.logradouro}}</td>
+                            <td>{{a.numero}}</td>
+                            <td>{{a.cep}}</td>
+                            <td>{{a.complemento}}</td>
+                            <td>
+                                <a href="/update/{{a.ra}}" class="btn btn-warning btn-xs" data-toggle="modal"
+                                    data-target="#editModal{{a.ra}}">
+                                    Editar
+                                    <i class="fas fa-edit pl-2"></i>
+                                </a>
+                                <a href="/delete/{{a.ra}}" class="btn btn-danger btn-xs"
+                                    onclick="return confirm('Tem certeza que quer remover?')">
+                                    Remover
+                                    <i class="fas fa-trash pl-2"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- edit Modal -->
+                        <div class="modal fade" id="editModal{{a.ra}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        Editar Aluno
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{url_for('update')}}" method="POST">
+                                            <div class="form-group">
+                                                <label>R.A</label>
+                                                <input type="text" name="ra" class="form-control" required="1"
+                                                    value="{{a.ra}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Nome</label>
+                                                <input type="text" name="nome" class="form-control" required="1"
+                                                    value="{{a.nome}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>E-mail</label>
+                                                <input type="email" name="email" class="form-control" required="1"
+                                                    value="{{a.email}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Logradouro</label>
+                                                <input type="text" name="logradouro" class="form-control" required="1"
+                                                    value="{{a.logradouro}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Numero</label>
+                                                <input type="number" name="numero" class="form-control" required="1"
+                                                    value="{{a.numero}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>CEP</label>
+                                                <input type="number" name="cep" class="form-control" required="1"
+                                                    value="{{a.cep}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Complemento</label>
+                                                <input type="text" name="complemento" class="form-control" required="1"
+                                                    value="{{a.complemento}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Salvar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                            Fechar <i class="fas fa-times pl-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- //edit Modal -->
+                        {% endfor %}
+                    </tbody>
+
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Adicionar Aluno
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('insert')}}" method="POST">
+                    <div class="form-group">
+                        <label>R.A</label>
+                        <input type="text" name="ra" class="form-control" required="true">
+                    </div>
+                    <div class="form-group">
+                        <label>Nome</label>
+                        <input type="text" name="nome" class="form-control" required="1">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" name="email" class="form-control" required="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Logradouro</label>
+                        <input type="text" name="logradouro" class="form-control" required="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Numero</label>
+                        <input type="text" name="numero" class="form-control" required="1">
+                    </div>
+                    <div class="form-group">
+                        <label>CEP</label>
+                        <input type="text" name="cep" class="form-control" required="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Complemento</label>
+                        <input type="text" name="complemento" class="form-control" required="1">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Adicionar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Fechar <i class="fas fa-times pl-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //Add Modal -->
+
+{% endblock %}
